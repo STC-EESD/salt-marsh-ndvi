@@ -81,7 +81,7 @@ def batchExportTiff(
 
     ### Select grid cells that intersect BC or ON
     # selectedCells = grid.filterBounds(fcSaltMarsh.limit(1000));
-    selected_cells = grid.filterBounds(temp_fcSaltMarsh);
+    selectedCells = grid.filterBounds(temp_fcSaltMarsh);
     print( "selectedCells.size().getInfo():", selectedCells.size().getInfo() );
 
     # ####################################
