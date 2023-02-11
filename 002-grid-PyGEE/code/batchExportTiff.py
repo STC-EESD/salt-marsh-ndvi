@@ -83,8 +83,8 @@ def batchExportTiff(
     print( "temp_fcSaltMarsh.aggregate_max('myIndex'):", temp_fcSaltMarsh.aggregate_max("myIndex") );
 
     ### Select grid cells that intersect BC or ON
-    # selectedCells = grid.filterBounds(fcSaltMarsh.limit(1000));
-    selectedCells = grid.filterBounds(temp_fcSaltMarsh);
+    # selectedCells = grid.filterBounds(temp_fcSaltMarsh);
+    selectedCells = grid.filterBounds(fcSaltMarsh.limit(1000));
     print( "selectedCells.size().getInfo():", selectedCells.size().getInfo() );
 
     # ####################################
