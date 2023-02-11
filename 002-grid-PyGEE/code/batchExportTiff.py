@@ -76,8 +76,11 @@ def batchExportTiff(
     print( 'fcSaltMarsh.size().getInfo():', fcSaltMarsh.size().getInfo() );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    temp_fcSaltMarsh = fcSaltMarsh.filter(ee.Filter.eq('batchID',batchID));
-    print( 'temp_fcSaltMarsh.size().getInfo():', temp_fcSaltMarsh.size().getInfo() );
+    # temp_fcSaltMarsh = fcSaltMarsh.filter(ee.Filter.eq('batchID',batchID));
+    temp_fcSaltMarsh = ee.FeatureCollection(fcSaltMarsh.toList( batchSize, batchSize * batchSize ));
+    print( 'temp_fcSaltMarsh.size().getInfo():',         temp_fcSaltMarsh.size().getInfo()         );
+    print( "temp_fcSaltMarsh.aggregate_min('myIndex'):", temp_fcSaltMarsh.aggregate_min("myIndex") );
+    print( "temp_fcSaltMarsh.aggregate_max('myIndex'):", temp_fcSaltMarsh.aggregate_max("myIndex") );
 
     ### Select grid cells that intersect BC or ON
     # selectedCells = grid.filterBounds(fcSaltMarsh.limit(1000));
