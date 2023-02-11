@@ -39,14 +39,43 @@ logging.basicConfig(filename='log.debug',level=logging.DEBUG)
 # import seaborn as sns
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-from test_eeAuthenticate import test_eeAuthenticate
-from test_eeBatchExport  import test_eeBatchExport
+from batchExportTiff          import batchExportTiff;
+from eeFeatureCollectionUtils import featureCollectionGetBatches;
+from eeImageCollectionUtils   import imageCollectionGetYearRange;
+from test_eeAuthenticate      import test_eeAuthenticate;
+from test_eeBatchExport       import test_eeBatchExport;
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-test_eeAuthenticate()
-test_eeBatchExport(
-    google_drive_folder = google_drive_folder
-    )
+test_eeAuthenticate();
+
+saltMarshGeometries = 'users/tasharabinowitz/SaltmarshpolyByBioregion_v2';
+minShapeArea        = 100;
+batchSize           = 1000;
+
+batchIDs = featureCollectionGetBatches(
+    featureCollectionName = saltMarshGeometries,
+    minShapeArea          = minShapeArea,
+    batchSize             = batchSize,
+    google_drive_folder   = google_drive_folder,
+    exportDescription     = 'DF-popCenter-batch',
+    exportFileNamePrefix  = 'DF-popCenter-batch'
+    );
+print("\nbatchIDs:\n",batchIDs,"\n");
+
+# for batchID in batchIDs:
+for batchID in batchIDs[:2]:
+    batchExportTiff(
+        batchSize             = batchSize,
+        batchID               = batchID,
+        featureCollectionName = saltMarshGeometries,
+        minShapeArea          = minShapeArea,
+        # imageCollectionName = modis_061_11A1,
+        google_drive_folder   = google_drive_folder
+        );
+
+# test_eeBatchExport(
+#     google_drive_folder = google_drive_folder
+#     )
 
 # ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 
