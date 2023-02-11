@@ -25,7 +25,17 @@ visualize.grid_inner <- function(
     SF.canada = NULL
     ) {
 
+    SF.grid <- sf::st_as_sf(
+        x        = data.frame(name = "grid", total.area = as.numeric(sf::st_area(SF.canada))),
+        geometry = sf::st_make_grid(
+            x = SF.canada,
+            n = c(100,100)
+            )
+        );
+
     my.tmap <- tmap::tm_shape(SF.canada) + tmap::tm_borders();
+    my.tmap <- my.tmap + tmap::tm_shape(SF.grid) + tmap::tm_borders();
+
     # my.tmap <- my.tmap + tmap::tm_shape(SF.year) + tmap::tm_dots( # tmap::tm_bubbles(
     #     size  = err.colname, # "NDVI.err.codr.230m", # "area",
     #     col   = "orange",
