@@ -1,0 +1,13 @@
+
+downloading: https://www.census.gc.ca/census-recensement/2021/geo/sip-pis/boundary-limites/files-fichiers/lpr_000a21a_e.zip
+unzipping: lpr_000a21a_e.zip
+Archive:  lpr_000a21a_e.zip
+  inflating: lpr_000a21a_e/lpr_000a21a_e.dbf  
+  inflating: lpr_000a21a_e/lpr_000a21a_e.prj  
+  inflating: lpr_000a21a_e/lpr_000a21a_e.shp  
+  inflating: lpr_000a21a_e/lpr_000a21a_e.shx  
+  inflating: lpr_000a21a_e/lpr_000a21a_e.xml  
+
+
+done
+
