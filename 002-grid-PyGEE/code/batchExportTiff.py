@@ -76,13 +76,13 @@ def batchExportTiff(
     print( 'fcSaltMarsh.size().getInfo():', fcSaltMarsh.size().getInfo() );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    # temp_fcSaltMarsh = fcSaltMarsh.filter(ee.Filter.eq('batchID',batchSize));
-    # print( 'temp_fcSaltMarsh.size().getInfo():', temp_fcSaltMarsh.size().getInfo() );
+    temp_fcSaltMarsh = fcSaltMarsh.filter(ee.Filter.eq('batchID',batchID));
+    print( 'temp_fcSaltMarsh.size().getInfo():', temp_fcSaltMarsh.size().getInfo() );
 
     ### Select grid cells that intersect BC or ON
-    # var selected_cells = grid.filterBounds(temp_fcSaltMarsh);
-    selectedCells = grid.filterBounds(fcSaltMarsh.limit(1000));
-    print("selectedCells.size().getInfo():",selectedCells.size().getInfo());
+    # selectedCells = grid.filterBounds(fcSaltMarsh.limit(1000));
+    # selected_cells = grid.filterBounds(temp_fcSaltMarsh);
+    # print("selectedCells.size().getInfo():",selectedCells.size().getInfo());
 
     # ####################################
     # # Import water polygons for masking
