@@ -29,7 +29,7 @@ visualize.grid_inner <- function(
         x        = data.frame(name = "grid", total.area = as.numeric(sf::st_area(SF.canada))),
         geometry = sf::st_make_grid(
             x = SF.canada,
-            n = c(200,200)
+            n = c(100,100)
             )
         );
 
