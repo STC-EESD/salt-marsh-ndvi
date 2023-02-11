@@ -57,8 +57,8 @@ batchIDs = featureCollectionGetBatches(
     minShapeArea          = minShapeArea,
     batchSize             = batchSize,
     google_drive_folder   = google_drive_folder,
-    exportDescription     = 'DF-popCenter-batch',
-    exportFileNamePrefix  = 'DF-popCenter-batch'
+    exportDescription     = 'DF-saltMarsh-batch',
+    exportFileNamePrefix  = 'DF-saltMarsh-batch'
     );
 print("\nbatchIDs:\n",batchIDs,"\n");
 
