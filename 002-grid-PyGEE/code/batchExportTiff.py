@@ -14,7 +14,7 @@ def batchExportTiff(
     google_drive_folder
     ):
 
-    thisFunctionName = "batchExportByYear";
+    thisFunctionName = "batchExportTiff";
     print( "\n### " + thisFunctionName + " starts (batchID:" + str(batchID) + ") ..." );
 
     # ####################################
@@ -85,9 +85,9 @@ def batchExportTiff(
 
     ### Select grid cells that intersect BC or ON
     # selectedCells = grid.filterBounds(temp_fcSaltMarsh);
-    # selectedCells = grid.filterBounds(fcSaltMarsh);
     # selectedCells = grid.filterBounds(fcSaltMarsh.limit(1000));
-    # print( "selectedCells.size().getInfo():", selectedCells.size().getInfo() );
+    selectedCells = grid.filterBounds(fcSaltMarsh);
+    print( "selectedCells.size().getInfo():", selectedCells.size().getInfo() );
 
     # ####################################
     # # Import water polygons for masking
