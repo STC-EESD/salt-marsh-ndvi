@@ -45,13 +45,18 @@ cat(paste0("\n# n.cores = ",n.cores,"\n"));
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 data.snapshot.boundaries <- "2023-02-11.01";
-SF.canada <- sf::st_read(
+SF.provinces.territories <- sf::st_read(
     dsn = file.path(data.directory,data.snapshot.boundaries,"lpr_000a21a_e","lpr_000a21a_e.shp")
     );
-SF.canada$area  <- as.numeric(sf::st_area(sf::st_geometry(SF.canada))) / 1e6;
-SF.canada$PRUID <- as.integer(SF.canada$PRUID);
-cat("\nstr(SF.canada)\n");
-print( str(SF.canada)   );
+SF.provinces.territories$area  <- as.numeric(sf::st_area(sf::st_geometry(SF.provinces.territories))) / 1e6;
+SF.provinces.territories$PRUID <- as.integer(SF.provinces.territories$PRUID);
+cat("\nstr(SF.provinces.territories)\n");
+print( str(SF.provinces.territories)   );
+
+### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+SF.canada <- sf::st_union(SF.provinces.territories);
+cat("\nsf::st_crs(SF.canada)\n");
+print( sf::st_crs(SF.canada)   );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 visualize.grid(SF.canada = SF.canada);

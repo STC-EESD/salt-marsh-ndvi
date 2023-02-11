@@ -50,3 +50,14 @@ visualize.grid_inner <- function(
     return( NULL );
 
     }
+
+# st_make_grid(
+#   x,
+#   cellsize = c(diff(st_bbox(x)[c(1, 3)]), diff(st_bbox(x)[c(2, 4)]))/n,
+#   offset = st_bbox(x)[c("xmin", "ymin")],
+#   n = c(10, 10),
+#   crs = if (missing(x)) NA_crs_ else st_crs(x),
+#   what = "polygons",
+#   square = TRUE,
+#   flat_topped = FALSE
+# )
