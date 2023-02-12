@@ -51,7 +51,7 @@ test_eeAuthenticate();
 saltMarshGeometries = 'users/tasharabinowitz/SaltmarshpolyByBioregion_v2';
 minShapeArea        = 100;
 batchSize           = 1000;
-gridScale           = 1e5;
+gridScale           = 1e4;
 
 batchIDs = featureCollectionGetBatches(
     featureCollectionName = saltMarshGeometries,
