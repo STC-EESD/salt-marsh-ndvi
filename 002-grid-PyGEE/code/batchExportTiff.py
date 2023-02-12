@@ -8,6 +8,7 @@ from coe import eeCollection_addIndexes, eeCollection_addBatchIDs;
 def batchExportTiff(
     batchSize,
     batchID,
+    gridScale,
     featureCollectionName,
     minShapeArea,
     # imageCollectionName,
@@ -44,11 +45,11 @@ def batchExportTiff(
             ]'
         );
 
-    ### (lon,lat)'s of extreme points of Canada
+    ### (lon,lat)'s of extreme points of salt marshes
     lon_min = -140.931389;
     lon_max =  -52.619444;
     lat_min =   41.682778;
-    lat_max =   83.111389;
+    lat_max =   62.500000; # 83.111389;
 
     ### Define the regional bounds of animation frames.
     boundingRectangle = ee.Geometry.Polygon(
@@ -63,8 +64,7 @@ def batchExportTiff(
         geodesic = False # geodesic
         );
 
-    myScale = 1e5;
-    grid = boundingRectangle.coveringGrid(projCanadaAlbersEqualAreaConic,myScale);
+    grid = boundingRectangle.coveringGrid(projCanadaAlbersEqualAreaConic,gridScale);
     print('grid.size().getInfo():',grid.size().getInfo());
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
