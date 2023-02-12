@@ -58,8 +58,8 @@ batchIDs = featureCollectionGetBatches(
     minShapeArea          = minShapeArea,
     batchSize             = batchSize,
     google_drive_folder   = google_drive_folder,
-    exportDescription     = 'DF-saltMarsh-batch',
-    exportFileNamePrefix  = 'DF-saltMarsh-batch'
+    exportDescription     = 'DF-saltMarsh-batch-raster',
+    exportFileNamePrefix  = 'DF-saltMarsh-batch-raster'
     );
 print("\nbatchIDs:\n",batchIDs,"\n");
 
