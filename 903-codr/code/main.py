@@ -48,29 +48,19 @@ from test_eeAuthenticate      import test_eeAuthenticate;
 S2SR                = 'COPERNICUS/S2_SR_HARMONIZED'; #'COPERNICUS/S2_SR';
 saltMarshGeometries = 'users/tasharabinowitz/SaltmarshpolyByBioregion_v2';
 minShapeArea        = 100;
-batchSize           = 1000;
+batchSize           = 500;
 gridScale           = 1e4;
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 test_eeAuthenticate();
-
-# batchExportByYear(
-#     batchSize             = batchSize,
-#     batchID               = 0,
-#     year                  = 2021,
-#     featureCollectionName = saltMarshGeometries,
-#     minShapeArea          = minShapeArea,
-#     imageCollectionName   = S2SR, # modis_061_11A1,
-#     google_drive_folder   = google_drive_folder
-#     );
 
 batchIDs = featureCollectionGetBatches(
     featureCollectionName = saltMarshGeometries,
     minShapeArea          = minShapeArea,
     batchSize             = batchSize,
     google_drive_folder   = google_drive_folder,
-    exportDescription     = 'DF-saltMarsh-batch',
-    exportFileNamePrefix  = 'DF-saltMarsh-batch'
+    exportDescription     = 'DF-saltMarsh-batch-codr',
+    exportFileNamePrefix  = 'DF-saltMarsh-batch-codr'
     );
 print("\nbatchIDs:\n",batchIDs,"\n");
 
