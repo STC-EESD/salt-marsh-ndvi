@@ -76,22 +76,25 @@ def batchExportTiff(
     # print( 'fcSaltMarsh.size().getInfo():', fcSaltMarsh.size().getInfo() );
     #
     # # temp_fcSaltMarsh = fcSaltMarsh.filter(ee.Filter.eq('batchID',batchID));
-    # # fcSaltMarsh = ee.FeatureCollection(fcSaltMarsh.toList( batchSize, batchSize * batchSize ));
+    # # fcSaltMarsh = ee.FeatureCollection(fcSaltMarsh.toList( batchSize, batchID * batchSize ));
     # fcSaltMarsh = fcSaltMarsh.filter(ee.Filter.eq('batchID',batchID));
     # print( "fcSaltMarsh.size().getInfo():", fcSaltMarsh.size().getInfo() );
     # print( "fcSaltMarsh.aggregate_min('myIndex').getInfo():", fcSaltMarsh.aggregate_min("myIndex").getInfo() );
     # print( "fcSaltMarsh.aggregate_max('myIndex').getInfo():", fcSaltMarsh.aggregate_max("myIndex").getInfo() );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    fcSaltMarsh = ee.FeatureCollection(featureCollectionName) \
-        .filterMetadata('Shape_Area','greater_than',minShapeArea);
+    fcSaltMarsh = ee.FeatureCollection(
+        ee.FeatureCollection(featureCollectionName) \
+        .filterMetadata('Shape_Area','greater_than',minShapeArea) \
+        .toList( batchSize, batchID * batchSize )
+        );
     print( "fcSaltMarsh.size().getInfo():", fcSaltMarsh.size().getInfo() );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     ### Select grid cells that intersect BC or ON
     # selectedCells = grid.filterBounds(temp_fcSaltMarsh);
-    # selectedCells = grid.filterBounds(fcSaltMarsh);
-    selectedCells = grid.filterBounds(fcSaltMarsh.limit(1000));
+    # selectedCells = grid.filterBounds(fcSaltMarsh.limit(1000));
+    selectedCells = grid.filterBounds(fcSaltMarsh);
     print( "selectedCells.size().getInfo():", selectedCells.size().getInfo() );
 
     # ####################################
