@@ -22,7 +22,6 @@ def batchExportByYear(
         .toList( batchSize, batchID * batchSize )
         );
     print( "fcSaltMarsh.size().getInfo():", fcSaltMarsh.size().getInfo() );
-    print("# A-0");
 
     # ####################################
     def _addBand_NDVI(image):
@@ -39,8 +38,6 @@ def batchExportByYear(
             .rename('discretizedNDVI');
         return image.addBands(discretizedNDVI);
 
-    print("# A-1");
-
     # ####################################
     startDate = ee.Date.fromYMD(year, 1, 1);
     endDate   = ee.Date.fromYMD(year,12,31).advance(1,'day');
@@ -48,16 +45,13 @@ def batchExportByYear(
         .filter(ee.Filter.date(startDate,endDate)) \
         .filterBounds(fcSaltMarsh) \
         .map(_addBand_NDVI);
-    print("# A-2");
     # print( "S2SR.size().getInfo():" , S2SR.size().getInfo() );
 
     annualAverageNDVI = _addBand_discretizedNDVI(S2SR.select('NDVI').mean());
-    print("# A-3");
     # print( "annualAverageNDVI.bandNames().getInfo():" , annualAverageNDVI.bandNames().getInfo() );
 
     areaImage = ee.Image.pixelArea().divide(1e6) \
         .addBands(annualAverageNDVI.select('discretizedNDVI'));
-    print("# A-4");
     print( "areaImage.bandNames().getInfo():" , areaImage.bandNames().getInfo() );
 
     areasByDiscretizedNDVI = areaImage.reduceRegion(
@@ -70,7 +64,6 @@ def batchExportByYear(
         tileScale = 4,
         maxPixels = 1e10
         );
-    print("# A-5");
     # classAreas = ee.List(areas.get('groups'));
     # print("classAreas:",classAreas);
 
@@ -84,11 +77,9 @@ def batchExportByYear(
         fileFormat     = 'CSV'
         );
     print("### batch export task defined ...");
-    print("# A-6");
 
     temp_task.start();
     print("### batch export task started ...");
-    print("# A-7");
 
     # ####################################
     print( "### " + thisFunctionName + " exits (batchID:" + str(batchID) + ", year:" + str(year) + ") ..." );
