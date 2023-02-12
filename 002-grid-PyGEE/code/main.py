@@ -64,7 +64,7 @@ batchIDs = featureCollectionGetBatches(
 print("\nbatchIDs:\n",batchIDs,"\n");
 
 # for batchID in batchIDs:
-for batchID in batchIDs[:3]:
+for batchID in batchIDs[:10]:
     batchExportTiff(
         batchSize             = batchSize,
         batchID               = batchID,
