@@ -11,6 +11,7 @@ def batchExportTiff(
     gridScale,
     featureCollectionName,
     minShapeArea,
+    stringMapProjection,
     # imageCollectionName,
     google_drive_folder
     ):
@@ -20,30 +21,30 @@ def batchExportTiff(
 
     # ####################################
     # ####################################
-    # proj = ee.Projection('PROJCS["Canada_Albers_Equal_Area_Conic",GEOGCS["GCS_North_American_1983",DATUM["D_North_American_1983",SPHEROID["GRS_1980",6378137,298.257222101]],PRIMEM["Greenwich",0],UNIT["Degree",0.0174532925199433]],PROJECTION["Albers"],PARAMETER["False_Easting",0],PARAMETER["False_Northing",0],PARAMETER["Central_Meridian",-96],PARAMETER["Standard_Parallel_1",50],PARAMETER["Standard_Parallel_2",70],PARAMETER["Latitude_Of_Origin",40],UNIT["Meter",1],AUTHORITY["EPSG","102001"]]')
-    projCanadaAlbersEqualAreaConic = ee.Projection(
-        'PROJCS[\
-            "Canada_Albers_Equal_Area_Conic",\
-            GEOGCS[\
-                "GCS_North_American_1983",\
-                DATUM[\
-                    "D_North_American_1983",\
-                    SPHEROID["GRS_1980",6378137,298.257222101]\
-                    ],\
-                PRIMEM["Greenwich",0],\
-                UNIT["Degree",0.0174532925199433]\
-                ],\
-            PROJECTION["Albers"],\
-            PARAMETER["False_Easting",0],\
-            PARAMETER["False_Northing",0],\
-            PARAMETER["Central_Meridian",-96],\
-            PARAMETER["Standard_Parallel_1",50],\
-            PARAMETER["Standard_Parallel_2",70],\
-            PARAMETER["Latitude_Of_Origin",40],\
-            UNIT["Meter",1],\
-            AUTHORITY["EPSG","102001"]\
-            ]'
-        );
+    # objMapProjection = ee.Projection(
+    #     'PROJCS[\
+    #         "Canada_Albers_Equal_Area_Conic",\
+    #         GEOGCS[\
+    #             "GCS_North_American_1983",\
+    #             DATUM[\
+    #                 "D_North_American_1983",\
+    #                 SPHEROID["GRS_1980",6378137,298.257222101]\
+    #                 ],\
+    #             PRIMEM["Greenwich",0],\
+    #             UNIT["Degree",0.0174532925199433]\
+    #             ],\
+    #         PROJECTION["Albers"],\
+    #         PARAMETER["False_Easting",0],\
+    #         PARAMETER["False_Northing",0],\
+    #         PARAMETER["Central_Meridian",-96],\
+    #         PARAMETER["Standard_Parallel_1",50],\
+    #         PARAMETER["Standard_Parallel_2",70],\
+    #         PARAMETER["Latitude_Of_Origin",40],\
+    #         UNIT["Meter",1],\
+    #         AUTHORITY["EPSG","102001"]\
+    #         ]'
+    #     );
+    objMapProjection = ee.Projection(stringMapProjection);
 
     ### (lon,lat)'s of extreme points of salt marshes
     lon_min = -140.931389;
@@ -64,23 +65,8 @@ def batchExportTiff(
         geodesic = False # geodesic
         );
 
-    grid = boundingRectangle.coveringGrid(projCanadaAlbersEqualAreaConic,gridScale);
+    grid = boundingRectangle.coveringGrid(objMapProjection,gridScale);
     print('grid.size().getInfo():',grid.size().getInfo());
-
-    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    # fcSaltMarsh = ee.FeatureCollection(featureCollectionName) \
-    #     .filterMetadata('Shape_Area','greater_than',minShapeArea);
-    #
-    # fcSaltMarsh = eeCollection_addIndexes( fcSaltMarsh);
-    # fcSaltMarsh = eeCollection_addBatchIDs(fcSaltMarsh,batchSize);
-    # print( 'fcSaltMarsh.size().getInfo():', fcSaltMarsh.size().getInfo() );
-    #
-    # # temp_fcSaltMarsh = fcSaltMarsh.filter(ee.Filter.eq('batchID',batchID));
-    # # fcSaltMarsh = ee.FeatureCollection(fcSaltMarsh.toList( batchSize, batchID * batchSize ));
-    # fcSaltMarsh = fcSaltMarsh.filter(ee.Filter.eq('batchID',batchID));
-    # print( "fcSaltMarsh.size().getInfo():", fcSaltMarsh.size().getInfo() );
-    # print( "fcSaltMarsh.aggregate_min('myIndex').getInfo():", fcSaltMarsh.aggregate_min("myIndex").getInfo() );
-    # print( "fcSaltMarsh.aggregate_max('myIndex').getInfo():", fcSaltMarsh.aggregate_max("myIndex").getInfo() );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     fcSaltMarsh = ee.FeatureCollection(
@@ -91,9 +77,7 @@ def batchExportTiff(
     print( "fcSaltMarsh.size().getInfo():", fcSaltMarsh.size().getInfo() );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    ### Select grid cells that intersect BC or ON
-    # selectedCells = grid.filterBounds(temp_fcSaltMarsh);
-    # selectedCells = grid.filterBounds(fcSaltMarsh.limit(1000));
+    ### Select grid cells that intersect the current batch of salt marshes
     selectedCells = grid.filterBounds(fcSaltMarsh);
     print( "selectedCells.size().getInfo():", selectedCells.size().getInfo() );
 
