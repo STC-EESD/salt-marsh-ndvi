@@ -51,6 +51,7 @@ test_eeAuthenticate();
 saltMarshGeometries = 'users/tasharabinowitz/SaltmarshpolyByBioregion_v2';
 minShapeArea        = 100;
 batchSize           = 1000;
+gridScale           = 1e5;
 
 batchIDs = featureCollectionGetBatches(
     featureCollectionName = saltMarshGeometries,
@@ -67,6 +68,7 @@ for batchID in batchIDs[:3]:
     batchExportTiff(
         batchSize             = batchSize,
         batchID               = batchID,
+        gridScale             = gridScale,
         featureCollectionName = saltMarshGeometries,
         minShapeArea          = minShapeArea,
         # imageCollectionName = modis_061_11A1,
