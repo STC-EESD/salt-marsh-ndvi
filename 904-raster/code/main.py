@@ -47,7 +47,7 @@ from test_eeAuthenticate      import test_eeAuthenticate;
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 saltMarshGeometries = 'users/tasharabinowitz/SaltmarshpolyByBioregion_v2';
 minShapeArea        = 100;
-batchSize           = 1000;
+batchSize           = 500;
 gridScale           = 1e4;
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
