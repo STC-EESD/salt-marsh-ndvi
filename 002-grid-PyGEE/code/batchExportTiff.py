@@ -11,7 +11,6 @@ def batchExportTiff(
     gridScale,
     featureCollectionName,
     minShapeArea,
-    stringMapProjection,
     # imageCollectionName,
     google_drive_folder
     ):
@@ -21,30 +20,30 @@ def batchExportTiff(
 
     # ####################################
     # ####################################
-    # objMapProjection = ee.Projection(
-    #     'PROJCS[\
-    #         "Canada_Albers_Equal_Area_Conic",\
-    #         GEOGCS[\
-    #             "GCS_North_American_1983",\
-    #             DATUM[\
-    #                 "D_North_American_1983",\
-    #                 SPHEROID["GRS_1980",6378137,298.257222101]\
-    #                 ],\
-    #             PRIMEM["Greenwich",0],\
-    #             UNIT["Degree",0.0174532925199433]\
-    #             ],\
-    #         PROJECTION["Albers"],\
-    #         PARAMETER["False_Easting",0],\
-    #         PARAMETER["False_Northing",0],\
-    #         PARAMETER["Central_Meridian",-96],\
-    #         PARAMETER["Standard_Parallel_1",50],\
-    #         PARAMETER["Standard_Parallel_2",70],\
-    #         PARAMETER["Latitude_Of_Origin",40],\
-    #         UNIT["Meter",1],\
-    #         AUTHORITY["EPSG","102001"]\
-    #         ]'
-    #     );
-    objMapProjection = ee.Projection(stringMapProjection);
+    # proj = ee.Projection('PROJCS["Canada_Albers_Equal_Area_Conic",GEOGCS["GCS_North_American_1983",DATUM["D_North_American_1983",SPHEROID["GRS_1980",6378137,298.257222101]],PRIMEM["Greenwich",0],UNIT["Degree",0.0174532925199433]],PROJECTION["Albers"],PARAMETER["False_Easting",0],PARAMETER["False_Northing",0],PARAMETER["Central_Meridian",-96],PARAMETER["Standard_Parallel_1",50],PARAMETER["Standard_Parallel_2",70],PARAMETER["Latitude_Of_Origin",40],UNIT["Meter",1],AUTHORITY["EPSG","102001"]]')
+    projCanadaAlbersEqualAreaConic = ee.Projection(
+        'PROJCS[\
+            "Canada_Albers_Equal_Area_Conic",\
+            GEOGCS[\
+                "GCS_North_American_1983",\
+                DATUM[\
+                    "D_North_American_1983",\
+                    SPHEROID["GRS_1980",6378137,298.257222101]\
+                    ],\
+                PRIMEM["Greenwich",0],\
+                UNIT["Degree",0.0174532925199433]\
+                ],\
+            PROJECTION["Albers"],\
+            PARAMETER["False_Easting",0],\
+            PARAMETER["False_Northing",0],\
+            PARAMETER["Central_Meridian",-96],\
+            PARAMETER["Standard_Parallel_1",50],\
+            PARAMETER["Standard_Parallel_2",70],\
+            PARAMETER["Latitude_Of_Origin",40],\
+            UNIT["Meter",1],\
+            AUTHORITY["EPSG","102001"]\
+            ]'
+        );
 
     ### (lon,lat)'s of extreme points of salt marshes
     lon_min = -140.931389;
@@ -65,7 +64,7 @@ def batchExportTiff(
         geodesic = False # geodesic
         );
 
-    grid = boundingRectangle.coveringGrid(objMapProjection,gridScale);
+    grid = boundingRectangle.coveringGrid(projCanadaAlbersEqualAreaConic,gridScale);
     print('grid.size().getInfo():',grid.size().getInfo());
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
