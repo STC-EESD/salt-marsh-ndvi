@@ -54,19 +54,6 @@ gridScale           = 1e4;
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 test_eeAuthenticate();
 
-### Fix batchExportByYear() so that main.py works (in the sense that we get
-### good output files in the designated Google Drive folder).
-### Then, uncomment the code segments below ... it should work by then.
-# batchExportByYear(
-#     batchSize             = batchSize,
-#     batchID               = 0,
-#     year                  = 2020,
-#     featureCollectionName = saltMarshGeometries,
-#     minShapeArea          = minShapeArea,
-#     imageCollectionName   = S2SR,
-#     google_drive_folder   = google_drive_folder
-#     );
-
 batchIDs = featureCollectionGetBatches(
     featureCollectionName = saltMarshGeometries,
     minShapeArea          = minShapeArea,
