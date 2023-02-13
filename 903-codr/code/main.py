@@ -54,40 +54,43 @@ gridScale           = 1e4;
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 test_eeAuthenticate();
 
-batchExportByYear(
-    batchSize             = batchSize,
-    batchID               = 0,
-    year                  = 2020,
-    featureCollectionName = saltMarshGeometries,
-    minShapeArea          = minShapeArea,
-    imageCollectionName   = S2SR,
-    google_drive_folder   = google_drive_folder
-    );
-
-# batchIDs = featureCollectionGetBatches(
+### Fix batchExportByYear() so that main.py works (in the sense that we get
+### good output files in the designated Google Drive folder).
+### Then, uncomment the code segments below ... it should work by then.
+# batchExportByYear(
+#     batchSize             = batchSize,
+#     batchID               = 0,
+#     year                  = 2020,
 #     featureCollectionName = saltMarshGeometries,
 #     minShapeArea          = minShapeArea,
-#     batchSize             = batchSize,
-#     google_drive_folder   = google_drive_folder,
-#     exportDescription     = 'DF-saltMarsh-batch-codr',
-#     exportFileNamePrefix  = 'DF-saltMarsh-batch-codr'
+#     imageCollectionName   = S2SR,
+#     google_drive_folder   = google_drive_folder
 #     );
-# print("\nbatchIDs:\n",batchIDs,"\n");
-#
-# referenceYears = [2020,2021];
-#
-# # for batchID in batchIDs:
-# for batchID in batchIDs[:3]:
-#     for year in referenceYears:
-#         batchExportByYear(
-#             batchSize             = batchSize,
-#             batchID               = batchID,
-#             year                  = year,
-#             featureCollectionName = saltMarshGeometries,
-#             minShapeArea          = minShapeArea,
-#             imageCollectionName   = S2SR,
-#             google_drive_folder   = google_drive_folder
-#             );
+
+batchIDs = featureCollectionGetBatches(
+    featureCollectionName = saltMarshGeometries,
+    minShapeArea          = minShapeArea,
+    batchSize             = batchSize,
+    google_drive_folder   = google_drive_folder,
+    exportDescription     = 'DF-saltMarsh-batch-codr',
+    exportFileNamePrefix  = 'DF-saltMarsh-batch-codr'
+    );
+print("\nbatchIDs:\n",batchIDs,"\n");
+
+referenceYears = [2020,2021];
+
+# for batchID in batchIDs:
+for batchID in batchIDs[:3]:
+    for year in referenceYears:
+        batchExportByYear(
+            batchSize             = batchSize,
+            batchID               = batchID,
+            year                  = year,
+            featureCollectionName = saltMarshGeometries,
+            minShapeArea          = minShapeArea,
+            imageCollectionName   = S2SR,
+            google_drive_folder   = google_drive_folder
+            );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 
