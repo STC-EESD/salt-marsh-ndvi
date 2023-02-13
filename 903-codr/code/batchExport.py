@@ -68,10 +68,33 @@ def batchExportByYear(
     # print("classAreas:",classAreas);
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    # outputFeatureCollection = ee.FeatureCollection(ee.List(areasByDiscretizedNDVI).map(lambda i : ee.Feature(i)));
+    outputFeatureCollection = ee.FeatureCollection(
+        ee.List(areasByDiscretizedNDVI.get('groups')).map(lambda i: ee.Feature(None,i))
+        );
+
+    def _renameColumns(tempFeature):
+        outputFeature = ee.Feature(
+            None,
+            {
+                discretizedNDVI: tempFeature.get('discretizedNDVI'),
+                area_km2:        tempFeature.get('sum')
+                }
+            );
+        return(outputFeature);
+
+    # outputFeatureCollection = outputFeatureCollection.map(_renameColumns);
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    ### This call of propertyNames() caused a timed-out error !!
+    # myPropertyNames = outputFeatureCollection.first().propertyNames().getInfo();
+    # print("myPropertyNames:",myPropertyNames);
+
     exportString = 'area_by_discretizedNDVI_' + '{:04d}'.format(batchID) +'_'+ str(year);
     temp_task = ee.batch.Export.table.toDrive(
-        collection     = areasByDiscretizedNDVI,
+        collection     = outputFeatureCollection,
         folder         = google_drive_folder,
+        # selectors    = myPropertyNames,
         description    = exportString,
         fileNamePrefix = exportString,
         fileFormat     = 'CSV'
