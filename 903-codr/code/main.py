@@ -4,16 +4,19 @@ import os, sys, shutil, getpass
 import pprint, logging, datetime
 import stat
 
+# get values from shell script arguments
 dir_data            = os.path.realpath(sys.argv[1])
 dir_code            = os.path.realpath(sys.argv[2])
 dir_output          = os.path.realpath(sys.argv[3])
 google_drive_folder = sys.argv[4]
 
+# create output directory and set as working directory
 if not os.path.exists(dir_output):
     os.makedirs(dir_output)
 
 os.chdir(dir_output)
 
+#print script start time and input prameters to output file
 myTime = "system time: " + datetime.datetime.now().strftime("%c")
 print( "\n" + myTime + "\n" )
 
@@ -39,45 +42,33 @@ logging.basicConfig(filename='log.debug',level=logging.DEBUG)
 # import seaborn as sns
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-from batchExport              import batchExportByYear;
-from eeFeatureCollectionUtils import featureCollectionGetBatches;
-from eeImageCollectionUtils   import imageCollectionGetYearRange;
-from test_eeAuthenticate      import test_eeAuthenticate;
+# Custom imports
+from test_eeAuthenticate            import test_eeAuthenticate;
+from combine_csv                    import combine_csv_from_dir
+from process_saltmarsh_gee_output   import prepare_dataframe_from_list
+
+import pandas as pd
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-S2SR                = 'COPERNICUS/S2_SR_HARMONIZED'; #'COPERNICUS/S2_SR';
-saltMarshGeometries = 'users/tasharabinowitz/SaltmarshpolyByBioregion_v2';
-minShapeArea        = 100;
-batchSize           = 500;
-gridScale           = 1e4;
+
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-test_eeAuthenticate();
+# Authenticate Earth Engine
+#test_eeAuthenticate();
 
-batchIDs = featureCollectionGetBatches(
-    featureCollectionName = saltMarshGeometries,
-    minShapeArea          = minShapeArea,
-    batchSize             = batchSize,
-    google_drive_folder   = google_drive_folder,
-    exportDescription     = 'DF-saltMarsh-batch-codr',
-    exportFileNamePrefix  = 'DF-saltMarsh-batch-codr'
-    );
-print("\nbatchIDs:\n",batchIDs,"\n");
+### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+# Specify the subfolder for the data
+subdir = "sample_gee_output"
+newdir = os.path.join(dir_data, subdir)
 
-referenceYears = [2020,2021];
+# Call function to combine simillar CSVs
+fulldata = combine_csv_from_dir(newdir)
 
-# for batchID in batchIDs:
-for batchID in batchIDs[:3]:
-    for year in referenceYears:
-        batchExportByYear(
-            batchSize             = batchSize,
-            batchID               = batchID,
-            year                  = year,
-            featureCollectionName = saltMarshGeometries,
-            minShapeArea          = minShapeArea,
-            imageCollectionName   = S2SR,
-            google_drive_folder   = google_drive_folder
-            );
+# Pass data to function to clean/prepare dataset
+prepdata = prepare_dataframe_from_list(fulldata)
+
+print("First rows of converted dataframe:")
+print(prepdata.head())
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 

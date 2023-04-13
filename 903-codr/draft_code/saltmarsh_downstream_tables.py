@@ -100,7 +100,7 @@ for index,row in enumerate(alldata_list[1:]):
             item = re.sub(r'NDVI_Class',"'NDVI_Class'", item)
             item = re.sub(r'sum',"'sum'",item)
 
-            # 
+            # can now evaluate the dictionary-like string into a python dictionary
             dict_item = ast.literal_eval(item)
             dict_list.append(dict_item)
 
