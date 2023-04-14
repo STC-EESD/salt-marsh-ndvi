@@ -47,6 +47,7 @@ from test_eeAuthenticate            import test_eeAuthenticate;
 from combine_csv                    import combine_csv_from_dir
 from process_saltmarsh_gee_output   import prepare_dataframe_from_list
 
+import numpy as np
 import pandas as pd
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
@@ -64,7 +65,7 @@ newdir = os.path.join(dir_data, subdir)
 # Call function to combine simillar CSVs
 fulldata = combine_csv_from_dir(newdir)
 
-# Pass data to function to clean/prepare dataset
+# Pass data to function to clean/prepare dataset (as a pandas dataframe)
 prepdata = prepare_dataframe_from_list(fulldata)
 
 print("First rows of converted dataframe:")

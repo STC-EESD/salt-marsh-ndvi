@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import re
 import ast
@@ -40,52 +41,41 @@ def prepare_dataframe_from_list(datalist):
         # can now evaluate the dictionary-like string into a python dictionary
         dict_item = ast.literal_eval(item)
         dict_list.append(dict_item)
+        
+        # Now convert the dict list into a dictionary with the new columns names
+        ndviclass_dict = {'NDVI_C0_area_km2': 0,
+                          'NDVI_C1_area_km2': 0,
+                          'NDVI_C2_area_km2': 0,
+                          'NDVI_C3_area_km2': 0}
 
-        return dict_list
-    #end function
-    
-    df['ndvi_class_area_km2'] = df['ndvi_class_area_km2'].apply(_parse_gee_vals_to_dictionary)
-
-
-    # Split the NDVI class area values into seperate columns
-
-    # Create new columns for each NDVI class
-    df = pd.concat([df,pd.DataFrame(columns=['NDVI_C0_area_km2','NDVI_C1_area_km2','NDVI_C2_area_km2','NDVI_C3_area_km2'])])
-    
-    '''
-    def _split_ndvi_class_areas(ndvi_class_cell):
-        """
-        Purpose: Take the list ofdictionaries in the cell, and transfer the contents to new rows
-
-        Input:
-        Output:
-        """
-        # Assumes that the input is a list of dictionaries
-
-        # transfer the list of dictionaries into new rows
-
-        for ndvidict in ndvi_class_cell:
+        for ndvidict in dict_list[0]:
             #get the values from each part of the dictionary
             ndviclass = ndvidict['NDVI_Class']
             classarea = ndvidict['sum']
 
             # assign the values to the correct class
             if ndviclass == 0:
-                listvals[0] = classarea
+                ndviclass_dict['NDVI_C0_area_km2'] = classarea
             elif ndviclass == 1:
-                listvals[1] = classarea
+                ndviclass_dict['NDVI_C1_area_km2'] = classarea
             elif ndviclass == 2:
-                listvals[2] = classarea
+                ndviclass_dict['NDVI_C2_area_km2'] = classarea
             elif ndviclass == 3:
-                listvals[3] = classarea
+                ndviclass_dict['NDVI_C3_area_km2'] = classarea
+        #end loop 
 
-        #end looop
-
-    #end subfunction
-    '''
-    #apply function to dataframe
+        return ndviclass_dict
+    #end function
     
+    df['ndvi_class_area_km2'] = df['ndvi_class_area_km2'].apply(_parse_gee_vals_to_dictionary)
 
+
+    # Split the NDVI class area values into seperate columns
+    #   Since the cell value for ndvi_class_arae_km2 is now a dictionary with appropriate column names, 
+    #   can apply the series to the dataframe, which should expand the values into their own column
+
+    df[['NDVI_C0_area_km2','NDVI_C1_area_km2','NDVI_C2_area_km2','NDVI_C3_area_km2']] = df['ndvi_class_area_km2'].apply(pd.Series)
+    df = df.drop(columns = 'ndvi_class_area_km2')
 
     # ---
     return df
