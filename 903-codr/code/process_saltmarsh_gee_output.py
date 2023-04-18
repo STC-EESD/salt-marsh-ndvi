@@ -16,9 +16,27 @@ def prepare_dataframe_from_list(datalist):
     #   First row (row 0) is column names, data is everything after (row 1:)
     df = pd.DataFrame.from_records(datalist[1:], columns = datalist[0])
     
-    # Remove the system:index and geo columns (not needed)
+    # Remove the system:index and geo columns created by Earth Engine (not needed)
     # Note that the SLC_ID column is the unique identifier 
     df = df.drop(columns = ['system:index','ECOZONE','.geo'])
+
+    # Create columns for the remaining Ecological Framework levels from the heirarchical Ecodistrict ID
+    #   To do so, only remove one set of right-hand period-seperated numbers for each framework level, starting with Ecodistrict IDs
+    def _split_eco_heirarchy_id(input_value):
+        '''
+        Purpose: rome the right-hand, period separated portion of the ecological framework ID to define         the next more generalised framework level ID
+        '''
+        val = str(input_value)
+        val = val.rsplit('.', maxsplit = 1)
+        output = val[0] #ignore the portion that was split off
+
+        return output
+    #end subfunction
+
+    df['Ecoregion_id']   = df['Ecodistrict_id'].apply(_split_eco_heirarchy_id)
+    df['Ecoprovince_id'] = df['Ecoregion_id'].apply(_split_eco_heirarchy_id)
+    df['Ecozone_id']     = df['Ecoprovince_id'].apply(_split_eco_heirarchy_id)
+
 
     # Convert the NDVI_class cell-value into a proper python dictionary
     
@@ -69,13 +87,31 @@ def prepare_dataframe_from_list(datalist):
     
     df['ndvi_class_area_km2'] = df['ndvi_class_area_km2'].apply(_parse_gee_vals_to_dictionary)
 
-
     # Split the NDVI class area values into seperate columns
     #   Since the cell value for ndvi_class_arae_km2 is now a dictionary with appropriate column names, 
-    #   can apply the series to the dataframe, which should expand the values into their own column
+    #   can apply the series to the dataframe, which expands the values into their own column
 
-    df[['NDVI_C0_area_km2','NDVI_C1_area_km2','NDVI_C2_area_km2','NDVI_C3_area_km2']] = df['ndvi_class_area_km2'].apply(pd.Series)
+    ndvi_class_names = ['NDVI_C0_area_km2','NDVI_C1_area_km2','NDVI_C2_area_km2','NDVI_C3_area_km2']
+
+    df[ndvi_class_names] = df['ndvi_class_area_km2'].apply(pd.Series)
     df = df.drop(columns = 'ndvi_class_area_km2')
+
+    # Calcualte row sums of: a) all area, b) vegetation-only area
+
+    def _sum_rows_by_columns(pd_dataframe,
+                             new_col_name,
+                             list_of_cols_sum):
+
+        pd_dataframe[new_col_name] = pd_dataframe[list_of_cols_sum].astype(float).sum('columns')
+
+        return pd_dataframe
+    #end subfunction
+    
+    # Sum the total area of all classes for the row (all classes, 0+1+2+3)
+    df = _sum_rows_by_columns(df, "all_area", ndvi_class_names)
+
+    # Sum the total of vegetated areas only (classes 1+2+3)
+    df = _sum_rows_by_columns(df, "veg_area", ndvi_class_names[1:])
 
     # ---
     return df

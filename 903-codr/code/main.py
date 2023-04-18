@@ -58,18 +58,45 @@ import pandas as pd
 #test_eeAuthenticate();
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-# Specify the subfolder for the data
+# Specify the subfolder for the input data
 subdir = "sample_gee_output"
 newdir = os.path.join(dir_data, subdir)
 
 # Call function to combine simillar CSVs
-fulldata = combine_csv_from_dir(newdir)
+fulldata_list = combine_csv_from_dir(newdir)
 
 # Pass data to function to clean/prepare dataset (as a pandas dataframe)
-prepdata = prepare_dataframe_from_list(fulldata)
+ndvidata = prepare_dataframe_from_list(fulldata_list)
 
 print("First rows of converted dataframe:")
-print(prepdata.head())
+print(ndvidata.head())
+
+# Create the output summary files
+#   Set parameters for grouping
+column_names_to_sum = ['NDVI_C0_area_km2', 'NDVI_C1_area_km2',
+                    'NDVI_C2_area_km2', 'NDVI_C3_area_km2',
+                    'all_area', 'veg_area']
+precision = 4 #parameter to round output value - 4 points after the decimal
+
+
+#   Create tables groubed by ecological framework level
+ndvi_ecozone     = ndvidata.groupby(['Ecozone_id'])[column_names_to_sum].sum().round(precision)
+ndvi_ecoprovince = ndvidata.groupby(['Ecoprovince_id'])[column_names_to_sum].sum().round(precision)
+ndvi_ecoregion   = ndvidata.groupby(['Ecoregion_id'])[column_names_to_sum].sum().round(precision)
+ndvi_ecodistrict = ndvidata.groupby(['Ecodistrict_id'])[column_names_to_sum].sum().round(precision)
+
+#print("Eco geography NDVI summary tables:")
+output_subfolder = "saltmarsh_ndvi_summary_csv"
+#create output subfolder if needed
+if not os.path.exists(output_subfolder):
+    os.makedirs(output_subfolder)
+#end if
+
+ndvi_ecozone.to_csv(os.path.join(dir_output,output_subfolder,'ndvi_class_areas_by_eco{}.csv'.format('zones')))
+ndvi_ecoprovince.to_csv(os.path.join(dir_output,output_subfolder,'ndvi_class_areas_by_eco{}.csv'.format('province')))
+ndvi_ecoregion.to_csv(os.path.join(dir_output,output_subfolder,'ndvi_class_areas_by_eco{}.csv'.format('region')))
+ndvi_ecodistrict.to_csv(os.path.join(dir_output,output_subfolder,'ndvi_class_areas_by_eco{}.csv'.format('district')))
+
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 
