@@ -8,7 +8,6 @@ import stat
 dir_data            = os.path.realpath(sys.argv[1])
 dir_code            = os.path.realpath(sys.argv[2])
 dir_output          = os.path.realpath(sys.argv[3])
-google_drive_folder = sys.argv[4]
 
 # create output directory and set as working directory
 if not os.path.exists(dir_output):
@@ -23,10 +22,9 @@ print( "\n" + myTime + "\n" )
 print( "\ndir_data: "            + dir_data            )
 print( "\ndir_code: "            + dir_code            )
 print( "\ndir_output: "          + dir_output          )
-print( "\ngoogle_drive_folder: " + google_drive_folder )
 
-print( "\nos.environ.get('GEE_ENV_DIR'):")
-print(    os.environ.get('GEE_ENV_DIR')  )
+#print( "\nos.environ.get('GEE_ENV_DIR'):")
+#print(    os.environ.get('GEE_ENV_DIR')  )
 
 print( "\n### python module search paths:" )
 for path in sys.path:
@@ -43,7 +41,6 @@ logging.basicConfig(filename='log.debug',level=logging.DEBUG)
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 # Custom imports
-from test_eeAuthenticate            import test_eeAuthenticate;
 from combine_csv                    import combine_csv_from_dir
 from process_saltmarsh_gee_output   import prepare_dataframe_from_list
 
@@ -54,22 +51,17 @@ import pandas as pd
 
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-# Authenticate Earth Engine
-#test_eeAuthenticate();
-
-### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 # Specify the subfolder for the input data
-subdir = "sample_gee_output"
-newdir = os.path.join(dir_data, subdir)
+input_subdir = "sample_gee_output"
+input_newdir = os.path.join(dir_data, input_subdir)
+print("Gathering GEE output CSVs from following folder: ")
+print(os.path.abspath(input_newdir))
 
 # Call function to combine simillar CSVs
 fulldata_list = combine_csv_from_dir(newdir)
 
 # Pass data to function to clean/prepare dataset (as a pandas dataframe)
 ndvidata = prepare_dataframe_from_list(fulldata_list)
-
-print("First rows of converted dataframe:")
-print(ndvidata.head())
 
 # Create the output summary files
 #   Set parameters for grouping
@@ -91,6 +83,9 @@ output_subfolder = "saltmarsh_ndvi_summary_csv"
 if not os.path.exists(output_subfolder):
     os.makedirs(output_subfolder)
 #end if
+
+print("Saving Salt Marsh NDVI Summary tables to following folder: ")
+print(os.path.abspath(output_subfolder))
 
 ndvi_ecozone.to_csv(os.path.join(dir_output,output_subfolder,'ndvi_class_areas_by_eco{}.csv'.format('zones')))
 ndvi_ecoprovince.to_csv(os.path.join(dir_output,output_subfolder,'ndvi_class_areas_by_eco{}.csv'.format('province')))

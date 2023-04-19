@@ -25,22 +25,11 @@ else
 fi
 
 ########################################################
-googleDriveFolder=earthengine/patrick
 
-########################################################
-myPythonScript=${codeDIR}/main.py
+myPythonScript=${codeDIR}/main-downstream.py
 stdoutFile=${outputDIR}/stdout.py.`basename ${myPythonScript} .py`
 stderrFile=${outputDIR}/stderr.py.`basename ${myPythonScript} .py`
-${pythonBinDIR}/python ${myPythonScript} ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} > ${stdoutFile} 2> ${stderrFile}
-
-##################################################
-# sleep 600
-
-##################################################
-# myRscript=${codeDIR}/main.R
-# stdoutFile=${outputDIR}/stdout.R.`basename ${myRscript} .R`
-# stderrFile=${outputDIR}/stderr.R.`basename ${myRscript} .R`
-# R --no-save --args ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} < ${myRscript} > ${stdoutFile} 2> ${stderrFile}
+${pythonBinDIR}/python ${myPythonScript} ${dataDIR} ${codeDIR} ${outputDIR} > ${stdoutFile} 2> ${stderrFile}
 
 ##################################################
 exit
