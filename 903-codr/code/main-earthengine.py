@@ -43,16 +43,26 @@ logging.basicConfig(filename='log.debug',level=logging.DEBUG)
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 # Custom imports
-from test_eeAuthenticate            import test_eeAuthenticate;
-
+from test_eeAuthenticate            import test_eeAuthenticate
+from ee_Saltmarsh_NDVI_composite    import tabulate_ndvi_class
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 #Authenticate Earth Engine
 test_eeAuthenticate();
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-
+# Set up variables for input to GEE scripts
+ee_saltmarsh_collection_name = "projects/patrickgosztonyi-lst/assets/2023-02-21_SaltMarshBySLC_ToGEE_V2"
+ee_image_collection_name = 'COPERNICUS/S2_SR_HARMONIZED'
+min_shape_are = 100 #meters
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+# Call the GEE function to create tables
+tabulate_ndvi_class(
+        feature_collection_name =   ee_saltmarsh_collection_name,
+        image_collection_name =     ee_image_collection_name,
+        google_drive_folder =       google_drive_folder
+        )
+
 
 ##################################################
 ##################################################

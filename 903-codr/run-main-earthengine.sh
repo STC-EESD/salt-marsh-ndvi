@@ -27,7 +27,7 @@ fi
 ########################################################
 googleDriveFolder=earthengine/patrick
 
-myPythonScript=${codeDIR}/main-downstream.py
+myPythonScript=${codeDIR}/main-earthengine.py
 stdoutFile=${outputDIR}/stdout.py.`basename ${myPythonScript} .py`
 stderrFile=${outputDIR}/stderr.py.`basename ${myPythonScript} .py`
 ${pythonBinDIR}/python ${myPythonScript} ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} > ${stdoutFile} 2> ${stderrFile}
