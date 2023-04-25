@@ -10,13 +10,22 @@ def tabulate_ndvi_class(
 
     """
     Purpose: Use Earth Engine to classify a growing season NDVI composite, calcualte the area by NDVI class
-        and create CSV files with the information
+        and create CSV files with the information.
     Assumptions:
         - The input feature collection contains polygons with attributes 'ECOZONE' and 'SLC_ID'
         - The input image collection is Sentinel-2 surface reflectance data
+
+    Notes:
+        - This script divides the output results by ecozone, and the region statistics calculated by Soil Landscape classification (SLC), in order for the computations to complete within Earth Engines batch processing time and memory limits. This combination was determined as the best balance between processing time and avoiding splitting the dataset output unnecessarily 
     """
+    
+    thisFunctionName = 'tabulate_ndvi_class'
+    print(f"\n### {thisFunctionName}() starts (feature_collection_name: {feature_collection_name}, groupby_attribute: {groupby_attribute}, image_collection_name: {image_collection_name}, min_feature_size: {min_feature_size}, google_drive_folder: {google_drive_folder})... \n")
+
     # get the salt marsh polygons above 100m2 (larger than 1 sentinel-2 pixel) 
     fc_saltmarsh = ee.FeatureCollection(feature_collection_name).filter(ee.Filter.gt('Shape_Area',100))
+
+    ### REPLACE THIS WITH COMPLETED NDVI COMPOSITE METHOD ###
     # create a one-year NDVI composite image with pixel areas
     s2_ndvi_areas = _create_test_ee_ndvi_raster(image_collection_name)
 
@@ -84,6 +93,10 @@ def tabulate_ndvi_class(
 
         #start the task
         mytask.start();print("task submitted")
+
+    #end loop
+
+    print(f"\n### {thisFunctionName}() exits...")
 
     return(None)
 
