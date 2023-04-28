@@ -26,11 +26,13 @@ fi
 
 ########################################################
 googleDriveFolder=earthengine/patrick
+# Defining the year(s) for analysis (comma seperated string, with no whitespace ex: "2019,2021" )
+years="2019,2021"
 
 myPythonScript=${codeDIR}/main-earthengine.py
 stdoutFile=${outputDIR}/stdout.py.`basename ${myPythonScript} .py`
 stderrFile=${outputDIR}/stderr.py.`basename ${myPythonScript} .py`
-${pythonBinDIR}/python ${myPythonScript} ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} > ${stdoutFile} 2> ${stderrFile}
+${pythonBinDIR}/python ${myPythonScript} ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} ${years} > ${stdoutFile} 2> ${stderrFile}
 
 ##################################################
 exit

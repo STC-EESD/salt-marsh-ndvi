@@ -5,6 +5,7 @@ def tabulate_ndvi_class(
         groupby_attribute = 'SLC_ID_1', #default for the salt marsh polygons
         image_collection_name = 'COPERNICUS/S2_SR_HARMONIZED', #assumes Sentinel-2 data 
         min_feature_size = 100, #square meters
+        year = '', #single year input
         google_drive_folder = ''
         ):
 
@@ -20,14 +21,14 @@ def tabulate_ndvi_class(
     """
     
     thisFunctionName = 'tabulate_ndvi_class'
-    print(f"\n### {thisFunctionName}() starts (feature_collection_name: {feature_collection_name}, groupby_attribute: {groupby_attribute}, image_collection_name: {image_collection_name}, min_feature_size: {min_feature_size}, google_drive_folder: {google_drive_folder})... \n")
+    print(f"\n### {thisFunctionName}() starts (feature_collection_name: {feature_collection_name}, groupby_attribute: {groupby_attribute}, image_collection_name: {image_collection_name}, min_feature_size: {min_feature_size}, year: {year}, google_drive_folder: {google_drive_folder})... \n")
 
     # get the salt marsh polygons above 100m2 (larger than 1 sentinel-2 pixel) 
     fc_saltmarsh = ee.FeatureCollection(feature_collection_name).filter(ee.Filter.gt('Shape_Area',100))
 
     ### REPLACE THIS WITH COMPLETED NDVI COMPOSITE METHOD ###
-    # create a one-year NDVI composite image with pixel areas
-    s2_ndvi_areas = _create_test_ee_ndvi_raster(image_collection_name)
+    # create a one-year NDVI composite image with pixel areas for given features
+    s2_ndvi_areas = _create_test_ee_ndvi_raster(feature_collection_name,image_collection_name, year)
 
     # from the input feature collection, get a list of unique ecozones
     ecozone_colname = 'ECOZONE'
@@ -78,8 +79,7 @@ def tabulate_ndvi_class(
     
         # export the reduced feature collection
         # create the table name programatically
-        #task_name = ('saltmarsh_NDVI_class_area_' + fc_colname + '-' + + '_by_' + fc_subcolname + 's')
-        task_name = f"saltmarsh_NDVIclass_areas-{ecozone_colname}-groupby-{groupby_attribute}-part{i+1}of{len(unique_ecozones)}"
+        task_name = f"saltmarsh_NDVIclass_areas_{year}-{ecozone_colname}-groupby-{groupby_attribute}-part{i+1}of{len(unique_ecozones)}"
 
         #Define the task to Export the table to drive
         mytask = ee.batch.Export.table.toDrive(
@@ -105,7 +105,8 @@ def tabulate_ndvi_class(
 
 def _create_test_ee_ndvi_raster(
         feature_collection_name,
-        image_collection_name = 'COPERNICUS/S2_SR_HARMONIZED'):
+        image_collection_name = 'COPERNICUS/S2_SR_HARMONIZED',
+        year = ''):
     """
     Purpose: create an image collection of Sentinel-2 imagery to be used for testing
     """
@@ -146,11 +147,16 @@ def _create_test_ee_ndvi_raster(
     # Preparing imagery
     
     #create feature collection 
-    input_fc = ee.FeatureCollection("projects/patrickgosztonyi-lst/assets/2023-02-21_SaltMarshBySLC_ToGEE_V2")
+    input_fc = ee.FeatureCollection(feature_collection_name)
+    #input_fc = ee.FeatureCollection("projects/patrickgosztonyi-lst/assets/2023-02-21_SaltMarshBySLC_ToGEE_V2")
+    
+    #create the date variables for the growing season
+    startdate = ee.Date.fromYMD(year, 5, 1) # May 1st
+    enddate = ee.Date.fromYMD(year, 9, 30) # September 30th
 
     #getting the imagery
     s2 = (ee.ImageCollection(image_collection_name)
-                  .filterDate('2020-05-01', '2020-10-01')
+                  .filterDate(startdate, enddate)
                   .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',30))
                   .filterBounds(input_fc.geometry().bounds())
                   .map(maskS2clouds))

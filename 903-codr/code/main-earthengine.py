@@ -9,6 +9,7 @@ dir_data            = os.path.realpath(sys.argv[1])
 dir_code            = os.path.realpath(sys.argv[2])
 dir_output          = os.path.realpath(sys.argv[3])
 google_drive_folder = sys.argv[4]
+years               = sys.argv[5].split(',')
 
 # create output directory and set as working directory
 if not os.path.exists(dir_output):
@@ -44,7 +45,7 @@ logging.basicConfig(filename='log.debug',level=logging.DEBUG)
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 # Custom imports
 from test_eeAuthenticate            import test_eeAuthenticate
-from ee_Saltmarsh_NDVI_composite    import tabulate_ndvi_class
+from ee_saltmarsh_ndvi_analysis     import tabulate_ndvi_class
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 #Authenticate Earth Engine
 test_eeAuthenticate();
@@ -57,12 +58,17 @@ min_shape_are = 100 #meters
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 # Call the GEE function to create tables
-tabulate_ndvi_class(
-        feature_collection_name =   ee_saltmarsh_collection_name,
-        image_collection_name =     ee_image_collection_name,
-        google_drive_folder =       google_drive_folder
-        )
+# Iterate through the input list of years
+for year in years:
 
+    year = int(year)
+    tabulate_ndvi_class(
+            feature_collection_name =   ee_saltmarsh_collection_name,
+            image_collection_name   =   ee_image_collection_name,
+            year                    =   year,
+            google_drive_folder     =   google_drive_folder
+            )
+#end loop
 
 ##################################################
 ##################################################
