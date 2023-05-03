@@ -52,16 +52,20 @@ import pandas as pd
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 # Specify the subfolder for the input data
-input_subdir = "sample_gee_output"
+input_subdir = "multiyear_sample_gee_output"
 input_newdir = os.path.join(dir_data, input_subdir)
 print("Gathering GEE output CSVs from following folder: ")
 print(os.path.abspath(input_newdir))
 
 # Call function to combine simillar CSVs
-fulldata_list = combine_csv_from_dir(newdir)
+fulldata_list = combine_csv_from_dir(input_newdir)
 
 # Pass data to function to clean/prepare dataset (as a pandas dataframe)
 ndvidata = prepare_dataframe_from_list(fulldata_list)
+
+# Get a list of unique years from the dataset
+year_list = ndvidata.year.unique()
+
 
 # Create the output summary files
 #   Set parameters for grouping
@@ -70,28 +74,33 @@ column_names_to_sum = ['NDVI_C0_area_km2', 'NDVI_C1_area_km2',
                     'all_area', 'veg_area']
 precision = 4 #parameter to round output value - 4 points after the decimal
 
+# loop through year list
+for year in year_list:
+    
+    # select only the data for the given year
+    year_ndvidata = ndvidata.loc[ndvidata['year'] == year]
 
-#   Create tables groubed by ecological framework level
-ndvi_ecozone     = ndvidata.groupby(['Ecozone_id'])[column_names_to_sum].sum().round(precision)
-ndvi_ecoprovince = ndvidata.groupby(['Ecoprovince_id'])[column_names_to_sum].sum().round(precision)
-ndvi_ecoregion   = ndvidata.groupby(['Ecoregion_id'])[column_names_to_sum].sum().round(precision)
-ndvi_ecodistrict = ndvidata.groupby(['Ecodistrict_id'])[column_names_to_sum].sum().round(precision)
+    #   Create tables groubed by ecological framework level
+    ndvi_ecozone     = year_ndvidata.groupby(['Ecozone_id'])[column_names_to_sum].sum().round(precision)
+    ndvi_ecoprovince = year_ndvidata.groupby(['Ecoprovince_id'])[column_names_to_sum].sum().round(precision)
+    ndvi_ecoregion   = year_ndvidata.groupby(['Ecoregion_id'])[column_names_to_sum].sum().round(precision)
+    ndvi_ecodistrict = year_ndvidata.groupby(['Ecodistrict_id'])[column_names_to_sum].sum().round(precision)
 
-#print("Eco geography NDVI summary tables:")
-output_subfolder = "saltmarsh_ndvi_summary_csv"
-#create output subfolder if needed
-if not os.path.exists(output_subfolder):
-    os.makedirs(output_subfolder)
-#end if
+    #print("Eco geography NDVI summary tables:")
+    output_subfolder = "saltmarsh_ndvi_summary_csv"
+    #create output subfolder if needed
+    if not os.path.exists(output_subfolder):
+        os.makedirs(output_subfolder)
+    #end if
 
-print("Saving Salt Marsh NDVI Summary tables to following folder: ")
-print(os.path.abspath(output_subfolder))
+    print(f"\nSaving Salt Marsh {year} NDVI Summary tables to following folder: ")
+    print(os.path.abspath(output_subfolder))
 
-ndvi_ecozone.to_csv(os.path.join(dir_output,output_subfolder,'ndvi_class_areas_by_eco{}.csv'.format('zones')))
-ndvi_ecoprovince.to_csv(os.path.join(dir_output,output_subfolder,'ndvi_class_areas_by_eco{}.csv'.format('province')))
-ndvi_ecoregion.to_csv(os.path.join(dir_output,output_subfolder,'ndvi_class_areas_by_eco{}.csv'.format('region')))
-ndvi_ecodistrict.to_csv(os.path.join(dir_output,output_subfolder,'ndvi_class_areas_by_eco{}.csv'.format('district')))
-
+    ndvi_ecozone.to_csv(os.path.join(dir_output,output_subfolder,'ndvi_{}_class_areas_by_eco{}.csv'.format(year, 'zones')))
+    ndvi_ecoprovince.to_csv(os.path.join(dir_output,output_subfolder,'ndvi_{}_class_areas_by_eco{}.csv'.format(year, 'province')))
+    ndvi_ecoregion.to_csv(os.path.join(dir_output,output_subfolder,'ndvi_{}_class_areas_by_eco{}.csv'.format(year, 'region')))
+    ndvi_ecodistrict.to_csv(os.path.join(dir_output,output_subfolder,'ndvi_{}_class_areas_by_eco{}.csv'.format(year, 'district')))
+# end for
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 

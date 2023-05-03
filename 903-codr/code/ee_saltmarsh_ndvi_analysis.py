@@ -53,7 +53,7 @@ def tabulate_ndvi_class(
             subset = ee.FeatureCollection(subset_fc.filter(ee.Filter.eq(groupby_attribute,subgeo_name)))
             ecodistrict_name = ee.String(subset.first().get('Ecodistr_1')) #gets the ecodistrict name for the given SLC in the subset
 
-            #next use reduce regions to to get the NDVI class areas for the subset
+            #next use reduce regions to get the NDVI class areas for the subset
             reduced = s2_ndvi_areas.reduceRegion(
                 reducer = ee.Reducer.sum().group(
                     groupField = 1,
@@ -64,10 +64,11 @@ def tabulate_ndvi_class(
                 maxPixels = 10e9
                 #tileScale = 3 #setting this can help with out of memory issues, but takes more time
             )
-            #convert the list output from the reducer into a feature (dictionaries are pairs of key/value lists)
+            #convert the list output from the reducer into a feature
+            # Takes two dictionaries as input, first is the Key, second is the Value of the key/value pairs
             output = ee.Feature(None, ee.Dictionary.fromLists( \
-                [ee.String(ecozone_colname),'Ecodistrict_id',ee.String(groupby_attribute),'ndvi_class_area_km2'], \
-                [geo, ecodistrict_name, ee.String(subgeo_name), reduced.get('groups')]))
+                [ee.String(ecozone_colname),'Ecodistrict_id',ee.String(groupby_attribute),'ndvi_class_area_km2', 'year'], \
+                [geo, ecodistrict_name, ee.String(subgeo_name), reduced.get('groups'), year]))
     
             #return the output
             return output
