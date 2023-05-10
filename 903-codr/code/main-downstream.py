@@ -71,8 +71,14 @@ year_list = ndvidata.year.unique()
 #   Set parameters for grouping
 column_names_to_sum = ['NDVI_C0_area_km2', 'NDVI_C1_area_km2',
                     'NDVI_C2_area_km2', 'NDVI_C3_area_km2',
-                    'all_area', 'veg_area']
+                    'veg_area', 'all_area']
 precision = 4 #parameter to round output value - 4 points after the decimal
+
+# create empty lists to store the dataframes output from the summary-by-year loop (more efficient to concatenate a list of dataframes once)
+ecz_summary_dfs = []
+ecp_summary_dfs = []
+ecr_summary_dfs = []
+ecd_summary_dfs = []
 
 # loop through year list
 for year in year_list:
@@ -80,27 +86,55 @@ for year in year_list:
     # select only the data for the given year
     year_ndvidata = ndvidata.loc[ndvidata['year'] == year]
 
-    #   Create tables groubed by ecological framework level
+    #   Create summary tables groubed by ecological framework level
     ndvi_ecozone     = year_ndvidata.groupby(['Ecozone_id'])[column_names_to_sum].sum().round(precision)
     ndvi_ecoprovince = year_ndvidata.groupby(['Ecoprovince_id'])[column_names_to_sum].sum().round(precision)
     ndvi_ecoregion   = year_ndvidata.groupby(['Ecoregion_id'])[column_names_to_sum].sum().round(precision)
     ndvi_ecodistrict = year_ndvidata.groupby(['Ecodistrict_id'])[column_names_to_sum].sum().round(precision)
+    
+    #add the current year to the summary datasets
+    ndvi_ecozone['year']     = year
+    ndvi_ecoprovince['year'] = year
+    ndvi_ecoregion['year']   = year
+    ndvi_ecodistrict['year'] = year
 
-    #print("Eco geography NDVI summary tables:")
-    output_subfolder = "saltmarsh_ndvi_summary_csv"
-    #create output subfolder if needed
-    if not os.path.exists(output_subfolder):
-        os.makedirs(output_subfolder)
-    #end if
+    #add the single-year summary dataframes into a list for each ECF level
+    ecz_summary_dfs.append(ndvi_ecozone)
+    ecp_summary_dfs.append(ndvi_ecoprovince)
+    ecr_summary_dfs.append(ndvi_ecoregion)
+    ecd_summary_dfs.append(ndvi_ecodistrict)
 
-    print(f"\nSaving Salt Marsh {year} NDVI Summary tables to following folder: ")
-    print(os.path.abspath(output_subfolder))
+#end for
 
-    ndvi_ecozone.to_csv(os.path.join(dir_output,output_subfolder,'ndvi_{}_class_areas_by_eco{}.csv'.format(year, 'zones')))
-    ndvi_ecoprovince.to_csv(os.path.join(dir_output,output_subfolder,'ndvi_{}_class_areas_by_eco{}.csv'.format(year, 'province')))
-    ndvi_ecoregion.to_csv(os.path.join(dir_output,output_subfolder,'ndvi_{}_class_areas_by_eco{}.csv'.format(year, 'region')))
-    ndvi_ecodistrict.to_csv(os.path.join(dir_output,output_subfolder,'ndvi_{}_class_areas_by_eco{}.csv'.format(year, 'district')))
-# end for
+
+# write out the combined summary datasets
+
+#print("Eco geography NDVI summary tables:")
+output_subfolder = "saltmarsh_ndvi_summary_csv"
+#create output subfolder if needed
+if not os.path.exists(output_subfolder):
+    os.makedirs(output_subfolder)
+#end if
+
+print("\nSaving Salt Marsh NDVI Summary tables to following folder: ")
+print(os.path.abspath(output_subfolder))
+    
+# concatenate the list of dataframes to create a single dataframe for output
+ecozone_summary     = pd.concat(ecz_summary_dfs)
+ecoprovince_summary = pd.concat(ecp_summary_dfs)
+ecoregion_summary   = pd.concat(ecr_summary_dfs)
+ecodistrict_summary = pd.concat(ecd_summary_dfs)
+
+# output the combined dataframes to CSV
+ecozone_summary.to_csv(os.path.join(dir_output,output_subfolder,
+                                        'ndvi_class_areas_by_eco{}.csv'.format('zones')))
+ecoprovince_summary.to_csv(os.path.join(dir_output,output_subfolder,
+                                        'ndvi_class_areas_by_eco{}.csv'.format('province')))
+ecoregion_summary.to_csv(os.path.join(dir_output,output_subfolder,
+                                        'ndvi_class_areas_by_eco{}.csv'.format('region')))
+ecodistrict_summary.to_csv(os.path.join(dir_output,output_subfolder,
+                                        'ndvi_class_areas_by_eco{}.csv'.format('district')))
+
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 
