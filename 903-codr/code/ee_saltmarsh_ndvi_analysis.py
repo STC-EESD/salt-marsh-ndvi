@@ -173,3 +173,39 @@ def _create_test_ee_ndvi_raster(
     return(sm_area_ndvi_bin)
     
 #end function
+
+
+
+def _create_ee_saltmarsh_ndvi_image(
+        feature_collection_name,
+        image_collection_name = 'COPERNICUS/S2_SR_HARMONIZED',
+        year = '')):
+
+    '''
+    Purpose: create an NDVI composite for a single year growing season (May 1st to Oct 31st) that includes image filtering appropriate for analysing salt marsh vegetation.
+
+    '''
+    # Define the date range
+    startdate = ee.Date.fromYMD(year,  5, 1) #May 1st
+    enddate =   ee.Date.fromYMD(year, 11, 1) #Oct 31st 
+
+    # Define cloud masking parameters
+
+    # Get imagery collection and run the cloud masking algorithm
+
+    # Calcualte Vegetation Indices and Water Indices
+
+    # Calculate the Tidal Marsh Innundation Index (TMII)
+
+    # Apply the TMII and NDVI masks to image collection
+
+    # Create the annual/growing season average NDVI
+
+    # Apply the NDVI classification to average dataset
+
+    # Create an area raster and add in the classified annual average NDVI
+
+    #return the classified average NDVI image
+    return()
+
+#end function
