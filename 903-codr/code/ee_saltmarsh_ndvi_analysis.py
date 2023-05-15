@@ -179,7 +179,7 @@ def _create_test_ee_ndvi_raster(
 def _create_ee_saltmarsh_ndvi_image(
         feature_collection_name,
         image_collection_name = 'COPERNICUS/S2_SR_HARMONIZED',
-        year = '')):
+        year = ''):
 
     '''
     Purpose: create an NDVI composite for a single year growing season (May 1st to Oct 31st) that includes image filtering appropriate for analysing salt marsh vegetation.
