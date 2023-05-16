@@ -1,6 +1,7 @@
 
 download.from.googledrive <- function(
-    google.drive.folder = "earthengine"
+    google.drive.folder = "earthengine",
+    destination.folder  = "multiyear_sample_gee_output"
     ) {
 
     thisFunctionName <- "download.from.googledrive";
@@ -48,10 +49,22 @@ download.from.googledrive <- function(
     print( DF.earth.engine   );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    original.folder <- base::getwd();
+    target.folder   <- base::file.path(original.folder,destination.folder);
+    if ( !base::dir.exists(target.folder) ) {
+        dir.create(
+            path      = target.folder,
+            recursive = TRUE
+            );
+        }
+    base::setwd(dir = target.folder);
+
     for ( temp.id in DF.earth.engine[,'id'] ) {
         cat("\ndownloading:",temp.id,"\n");
         googledrive::drive_download(file = googledrive::as_id(temp.id));
         }
+
+    base::setwd(dir = original.folder);
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     cat(paste0("\n",thisFunctionName,"() quits."));
