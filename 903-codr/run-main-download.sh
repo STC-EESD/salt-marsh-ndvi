@@ -35,6 +35,13 @@ myRscript=${codeDIR}/main-download.R
 stdoutFile=${outputDIR}/stdout.R.`basename ${myRscript} .R`
 stderrFile=${outputDIR}/stderr.R.`basename ${myRscript} .R`
 ${RBinDIR}/R --no-save --args ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} < ${myRscript} > ${stdoutFile} 2> ${stderrFile}
+sleep 30
+
+########################################################
+myPythonScript=${codeDIR}/main-downstream.py
+stdoutFile=${outputDIR}/stdout.py.`basename ${myPythonScript} .py`
+stderrFile=${outputDIR}/stderr.py.`basename ${myPythonScript} .py`
+${pythonBinDIR}/python ${myPythonScript} ${dataDIR} ${codeDIR} ${outputDIR} > ${stdoutFile} 2> ${stderrFile}
 
 ##################################################
 exit
