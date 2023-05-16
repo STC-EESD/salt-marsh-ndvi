@@ -69,9 +69,14 @@ year_list = ndvidata.year.unique()
 
 # Create the output summary files
 #   Set parameters for grouping
-column_names_to_sum = ['NDVI_C0_area_km2', 'NDVI_C1_area_km2',
-                    'NDVI_C2_area_km2', 'NDVI_C3_area_km2',
-                    'veg_area', 'all_area']
+column_names_to_sum = [
+    'NDVI_C0_area_km2',
+    'NDVI_C1_area_km2',
+    'NDVI_C2_area_km2',
+    'NDVI_C3_area_km2',
+    'veg_area',
+    'all_area'
+    ]
 precision = 4 #parameter to round output value - 4 points after the decimal
 
 # create empty lists to store the dataframes output from the summary-by-year loop (more efficient to concatenate a list of dataframes once)
