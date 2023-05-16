@@ -5,9 +5,9 @@ import pprint, logging, datetime
 import stat
 
 # get values from shell script arguments
-dir_data            = os.path.realpath(sys.argv[1])
-dir_code            = os.path.realpath(sys.argv[2])
-dir_output          = os.path.realpath(sys.argv[3])
+dir_data   = os.path.realpath(sys.argv[1])
+dir_code   = os.path.realpath(sys.argv[2])
+dir_output = os.path.realpath(sys.argv[3])
 
 # create output directory and set as working directory
 if not os.path.exists(dir_output):
@@ -41,19 +41,17 @@ logging.basicConfig(filename='log.debug',level=logging.DEBUG)
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 # Custom imports
-from combine_csv                    import combine_csv_from_dir
-from process_saltmarsh_gee_output   import prepare_dataframe_from_list
+from combine_csv                  import combine_csv_from_dir
+from process_saltmarsh_gee_output import prepare_dataframe_from_list
 
-import numpy as np
+import numpy  as np
 import pandas as pd
-
-### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 # Specify the subfolder for the input data
 input_subdir = "multiyear_sample_gee_output"
-input_newdir = os.path.join(dir_data, input_subdir)
+# input_newdir = os.path.join(dir_data, input_subdir)
+input_newdir = input_subdir
 print("Gathering GEE output CSVs from following folder: ")
 print(os.path.abspath(input_newdir))
 
