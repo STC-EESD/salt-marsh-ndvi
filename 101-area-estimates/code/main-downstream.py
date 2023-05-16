@@ -19,9 +19,9 @@ os.chdir(dir_output)
 myTime = "system time: " + datetime.datetime.now().strftime("%c")
 print( "\n" + myTime + "\n" )
 
-print( "\ndir_data: "            + dir_data            )
-print( "\ndir_code: "            + dir_code            )
-print( "\ndir_output: "          + dir_output          )
+print( "\ndir_data: "   + dir_data   )
+print( "\ndir_code: "   + dir_code   )
+print( "\ndir_output: " + dir_output )
 
 #print( "\nos.environ.get('GEE_ENV_DIR'):")
 #print(    os.environ.get('GEE_ENV_DIR')  )
