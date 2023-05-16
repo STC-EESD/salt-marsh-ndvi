@@ -5,7 +5,7 @@ The processing method for the Salt Marsh NDVI is split up into two portions:
 	- the Downstream portion
 
 USER NOTE:
-The processing requires User input to define the Analysis Years - the Year values to use must de defined in the "run-main-earthengine.sh" file (specific instructions are included in the file - current years are 2019 and 2021). 
+The processing requires User input to define the Analysis Years - the Year values to use must be defined in the "run-main-earthengine.sh" file (specific instructions are included in the file - current years are 2019 and 2021). 
 The downstream processing is designed to account for the specified years without further user input.
 
 Processing starts with the Earth Engine portion called through the run-main-earthengine.sh script, which creates an NDVI growing season composite, classifies the NDVI and then calculates the area of each class within Salt Marsh polygons. The result is output a series of CSV files in a Google Drive cloud folder (the shared folder "earthengine/patrick").
