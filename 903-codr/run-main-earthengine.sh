@@ -14,18 +14,21 @@ fi
 cp -r ${codeDIR} ${outputDIR}
 cp    $0         ${outputDIR}/code
 
-########################################################
+##################################################
 source ${HOME}/.gee_environment_variables
 if [[ "${OSTYPE}" =~ .*"linux".* ]]; then
   # cp ${HOME}/.gee_environment_variables ${outputDIR}/code/gee_environment_variables.txt
   pythonBinDIR=${GEE_ENV_DIR}/bin
+  RBinDIR=${pythonBinDIR}
 else
   pythonBinDIR=`which python`
   pythonBinDIR=${pythonBinDIR//\/python/}
+  RBinDIR=`which R`
+  RBinDIR=${RBinDIR//\/R/}
 fi
 
-########################################################
-googleDriveFolder=earthengine/patrick
+##################################################
+googleDriveFolder=earthengine/elijah
 # Defining the year(s) for analysis (comma seperated string, with no whitespace ex: "2019,2021" )
 years="2019,2021"
 
